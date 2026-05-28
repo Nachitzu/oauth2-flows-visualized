@@ -9,11 +9,28 @@ import { useFlowStore } from '@/store/flowStore';
 import clsx from 'clsx';
 
 function App() {
-  const { compareMode } = useFlowStore();
+  const { compareMode, autoPlay, autoPlaySpeed } = useFlowStore();
 
   useEffect(() => {
     document.documentElement.classList.remove('dark');
   }, []);
+
+  // Auto-play effect
+  useEffect(() => {
+    if (!autoPlay) return;
+
+    const interval = setInterval(() => {
+      const state = useFlowStore.getState();
+      const maxStep = state.getTotalSteps() - 1;
+      if (state.currentStepIndex < maxStep) {
+        state.nextStep();
+      } else {
+        state.toggleAutoPlay();
+      }
+    }, autoPlaySpeed);
+
+    return () => clearInterval(interval);
+  }, [autoPlay, autoPlaySpeed]);
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col">
