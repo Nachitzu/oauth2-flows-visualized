@@ -86,6 +86,9 @@ function App() {
                 <FlowCanvas flowId="pkce" />
               </div>
             </div>
+            <div className="xl:col-span-2 border-t border-slate-200 bg-white">
+              <StepControls />
+            </div>
           </>
         ) : (
           <>
