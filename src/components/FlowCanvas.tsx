@@ -153,7 +153,7 @@ export function FlowCanvas({ flowId }: FlowCanvasProps) {
       return {
         id: actorId,
         type: 'actor',
-        position: { x: index * 200 + 50, y: 100 },
+        position: { x: index * 280 + 80, y: 120 },
         data: {
           actor: actorId,
           label: actor.name,
@@ -236,7 +236,7 @@ export function FlowCanvas({ flowId }: FlowCanvasProps) {
   }, [memoEdges, setEdges]);
 
   return (
-    <div style={{ width: '100%', height: 400 }}>
+    <div style={{ width: '100%', height: 500 }}>
       <ReactFlow
         nodes={nodes}
         edges={edges}
