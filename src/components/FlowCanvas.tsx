@@ -8,6 +8,7 @@ import ReactFlow, {
   useEdgesState,
   MarkerType,
   Position,
+  Handle,
 } from 'reactflow';
 import 'reactflow/dist/style.css';
 import { useFlowStore, FLOWS } from '@/store/flowStore';
@@ -53,6 +54,7 @@ function ActorNode({ data }: { data: ActorNodeData }) {
         boxShadow: data.isHighlighted ? `0 0 20px ${SEVERITY_COLORS[data.severity]}40` : undefined,
       }}
     >
+      <Handle type="target" position={Position.Left} style={{ background: '#64748b', width: 8, height: 8, border: 'none' }} />
       <div className="flex items-center gap-2 mb-2">
         <span className="text-2xl">{data.icon}</span>
         <span className="text-xs font-medium text-slate-200">{data.label}</span>
@@ -65,6 +67,7 @@ function ActorNode({ data }: { data: ActorNodeData }) {
           {data.severity}
         </span>
       )}
+      <Handle type="source" position={Position.Right} style={{ background: '#64748b', width: 8, height: 8, border: 'none' }} />
     </div>
   );
 }
@@ -233,7 +236,7 @@ export function FlowCanvas({ flowId }: FlowCanvasProps) {
   }, [memoEdges, setEdges]);
 
   return (
-    <div className="w-full h-full min-h-[300px]">
+    <div className="w-full h-full">
       <ReactFlow
         nodes={nodes}
         edges={edges}
