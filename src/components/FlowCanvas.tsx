@@ -236,7 +236,7 @@ export function FlowCanvas({ flowId }: FlowCanvasProps) {
   }, [memoEdges, setEdges]);
 
   return (
-    <div className="w-full h-full">
+    <div style={{ width: '100%', height: 400 }}>
       <ReactFlow
         nodes={nodes}
         edges={edges}
