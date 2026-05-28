@@ -48,7 +48,7 @@ function App() {
               <div className="flex items-center justify-between">
                 <span className="text-sm font-medium text-slate-300">Authorization Code (No PKCE)</span>
               </div>
-              <div className="flex-1 min-h-0 bg-slate-800 rounded-lg border border-slate-700 overflow-hidden">
+              <div className="flex-1 h-[400px] bg-slate-800 rounded-lg border border-slate-700 overflow-hidden">
                 <FlowCanvas flowId="authorization-code" />
               </div>
             </div>
@@ -56,14 +56,14 @@ function App() {
               <div className="flex items-center justify-between">
                 <span className="text-sm font-medium text-emerald-400">PKCE (Protected)</span>
               </div>
-              <div className="flex-1 min-h-0 bg-slate-800 rounded-lg border border-emerald-900/50 overflow-hidden">
+              <div className="flex-1 h-[400px] bg-slate-800 rounded-lg border border-emerald-900/50 overflow-hidden">
                 <FlowCanvas flowId="pkce" />
               </div>
             </div>
           </>
         ) : (
           <>
-            <div className="flex-1 min-h-0 bg-slate-800 rounded-lg border border-slate-700 overflow-hidden">
+            <div className="flex-1 min-h-0 h-[400px] bg-slate-800 rounded-lg border border-slate-700 overflow-hidden">
               <FlowCanvas />
             </div>
             <div className="w-full xl:w-[420px] xl:min-h-0 bg-slate-800 rounded-lg border border-slate-700 overflow-hidden">

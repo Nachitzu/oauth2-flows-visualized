@@ -30,6 +30,11 @@ interface ActorNodeData {
   severity: Severity;
 }
 
+interface LoginNodeData {
+  title: string;
+  subtitle: string;
+}
+
 function ActorNode({ data }: { data: ActorNodeData }) {
   const borderColor = data.isHighlighted
     ? SEVERITY_COLORS[data.severity]
@@ -48,11 +53,13 @@ function ActorNode({ data }: { data: ActorNodeData }) {
         boxShadow: data.isHighlighted ? `0 0 20px ${SEVERITY_COLORS[data.severity]}40` : undefined,
       }}
     >
-      <span className="text-3xl">{data.icon}</span>
-      <span className="text-xs font-medium text-slate-200">{data.label}</span>
+      <div className="flex items-center gap-2 mb-2">
+        <span className="text-2xl">{data.icon}</span>
+        <span className="text-xs font-medium text-slate-200">{data.label}</span>
+      </div>
       {data.isHighlighted && (
         <span
-          className="text-[10px] font-bold uppercase tracking-wider"
+          className="text-[10px] font-bold uppercase tracking-wider mt-1"
           style={{ color: SEVERITY_COLORS[data.severity] }}
         >
           {data.severity}
@@ -62,8 +69,29 @@ function ActorNode({ data }: { data: ActorNodeData }) {
   );
 }
 
+function LoginNode({ data }: { data: LoginNodeData }) {
+  return (
+    <div className="bg-slate-900/90 border border-slate-700 rounded-xl p-4 w-[220px] shadow-lg">
+      <div className="text-xs uppercase tracking-wider text-slate-400 mb-2">{data.subtitle}</div>
+      <div className="text-sm font-semibold text-slate-100 mb-3">{data.title}</div>
+      <div className="flex flex-col gap-2">
+        <div className="bg-slate-800 border border-slate-700 rounded-md px-2 py-1 text-xs text-slate-400">
+          email
+        </div>
+        <div className="bg-slate-800 border border-slate-700 rounded-md px-2 py-1 text-xs text-slate-400">
+          password
+        </div>
+        <div className="bg-blue-600/80 text-white text-xs font-medium text-center rounded-md py-1.5">
+          Sign in
+        </div>
+      </div>
+    </div>
+  );
+}
+
 const nodeTypes = {
   actor: ActorNode,
+  login: LoginNode,
 };
 
 interface FlowCanvasProps {
@@ -115,7 +143,7 @@ export function FlowCanvas({ flowId }: FlowCanvasProps) {
   }, [activeFlowId]);
 
   const memoNodes: Node[] = useMemo(() => {
-    return actors.map((actorId, index) => {
+    const baseNodes = actors.map((actorId, index) => {
       const actor = ACTORS[actorId];
       const isHighlighted = involvedActors.has(actorId);
 
@@ -135,7 +163,28 @@ export function FlowCanvas({ flowId }: FlowCanvasProps) {
         targetPosition: Position.Left,
       };
     });
-  }, [actors, involvedActors, stepSeverity]);
+
+    const isLoginStep = currentStep?.id === 'authcode-3' || currentStep?.id === 'pkce-5';
+    if (!isLoginStep) {
+      return baseNodes;
+    }
+
+    const loginNode: Node = {
+      id: `login-${currentStep?.id ?? 'auth'}`,
+      type: 'login',
+      position: { x: 420, y: 220 },
+      data: {
+        title: 'Authorization Server Login',
+        subtitle: 'Login Screen',
+      } as LoginNodeData,
+      draggable: false,
+      selectable: false,
+      sourcePosition: Position.Right,
+      targetPosition: Position.Left,
+    };
+
+    return [...baseNodes, loginNode];
+  }, [actors, involvedActors, stepSeverity, currentStep]);
 
   // Create edges for the current step
   const memoEdges: Edge[] = useMemo(() => {
