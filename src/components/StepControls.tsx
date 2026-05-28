@@ -10,44 +10,44 @@ export function StepControls() {
   const isLast = currentStepIndex === totalSteps - 1;
 
   return (
-    <div className="max-w-[1800px] mx-auto px-4 py-3 flex items-center justify-between gap-4">
+    <div className="max-w-[1800px] mx-auto px-6 py-4 flex items-center justify-between gap-4">
       {/* Navigation buttons */}
       <div className="flex items-center gap-2">
         <button
           onClick={prevStep}
           disabled={isFirst}
           className={clsx(
-            'flex items-center gap-1 px-3 py-1.5 rounded-lg text-sm font-medium transition-all',
+            'flex items-center gap-1 px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-200',
             isFirst
-              ? 'bg-slate-700 text-slate-500 cursor-not-allowed'
-              : 'bg-slate-700 text-slate-200 hover:bg-slate-600'
+              ? 'bg-slate-100 text-slate-400 cursor-not-allowed'
+              : 'bg-white border border-slate-300 text-slate-700 hover:bg-slate-50 hover:border-slate-400 shadow-sm'
           )}
         >
-          <span>◀</span>
-          <span className="hidden sm:inline">Prev</span>
+          <span>←</span>
+          <span className="hidden sm:inline">Previous</span>
         </button>
 
         <button
           onClick={nextStep}
           disabled={isLast}
           className={clsx(
-            'flex items-center gap-1 px-3 py-1.5 rounded-lg text-sm font-medium transition-all',
+            'flex items-center gap-1 px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-200',
             isLast
-              ? 'bg-slate-700 text-slate-500 cursor-not-allowed'
-              : 'bg-blue-600 text-white hover:bg-blue-500'
+              ? 'bg-slate-100 text-slate-400 cursor-not-allowed'
+              : 'bg-indigo-600 text-white hover:bg-indigo-500 shadow-md shadow-indigo-500/30'
           )}
         >
           <span className="hidden sm:inline">Next</span>
-          <span>▶</span>
+          <span>→</span>
         </button>
 
         <button
           onClick={toggleAutoPlay}
           className={clsx(
-            'flex items-center gap-1 px-3 py-1.5 rounded-lg text-sm font-medium transition-all',
+            'flex items-center gap-1 px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-200',
             autoPlay
-              ? 'bg-emerald-600 text-white'
-              : 'bg-slate-700 text-slate-200 hover:bg-slate-600'
+              ? 'bg-amber-500 text-white shadow-md shadow-amber-500/30'
+              : 'bg-white border border-slate-300 text-slate-700 hover:bg-slate-50 hover:border-slate-400 shadow-sm'
           )}
         >
           <span>{autoPlay ? '⏸' : '▶'}</span>
@@ -57,34 +57,34 @@ export function StepControls() {
 
       {/* Step indicator */}
       <div className="flex items-center gap-3 flex-1 justify-center">
-        <span className="text-sm text-slate-400">
+        <span className="text-sm text-slate-500 font-medium">
           Step {currentStepIndex + 1} of {totalSteps}
         </span>
-        <div className="hidden sm:flex items-center gap-1">
+        <div className="hidden sm:flex items-center gap-1.5">
           {flow.steps.map((_, index) => (
             <button
               key={index}
               onClick={() => setStep(index)}
               className={clsx(
-                'w-2 h-2 rounded-full transition-all',
+                'h-2 rounded-full transition-all duration-300',
                 index === currentStepIndex
-                  ? 'bg-blue-500 w-4'
+                  ? 'bg-indigo-600 w-6'
                   : index < currentStepIndex
-                  ? 'bg-slate-500 hover:bg-slate-400'
-                  : 'bg-slate-700 hover:bg-slate-600'
+                  ? 'bg-slate-400 hover:bg-slate-500 w-2'
+                  : 'bg-slate-200 hover:bg-slate-300 w-2'
               )}
               title={`Step ${index + 1}`}
             />
           ))}
         </div>
-        <span className="hidden md:inline text-sm text-slate-300 font-medium">
+        <span className="hidden md:inline text-sm text-slate-700 font-semibold">
           {currentStep.title}
         </span>
       </div>
 
       {/* Current step info */}
-      <div className="hidden md:flex items-center gap-2">
-        <span className="text-xs text-slate-500">
+      <div className="hidden md:flex items-center gap-2 bg-slate-100 px-3 py-1.5 rounded-lg">
+        <span className="text-xs text-slate-500 font-mono">
           {currentStep.actorFrom} → {currentStep.actorTo}
         </span>
       </div>

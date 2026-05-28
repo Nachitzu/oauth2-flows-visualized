@@ -13,10 +13,10 @@ export function CompareMode() {
     <button
       onClick={toggleCompareMode}
       className={clsx(
-        'flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium transition-all border',
+        'flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 border-2',
         compareMode
-          ? 'bg-emerald-600/20 border-emerald-500/50 text-emerald-400 hover:bg-emerald-600/30'
-          : 'bg-slate-700 border-slate-600 text-slate-300 hover:bg-slate-600'
+          ? 'bg-indigo-50 border-indigo-300 text-indigo-700 hover:bg-indigo-100'
+          : 'bg-violet-50 border-violet-200 text-violet-700 hover:bg-violet-100'
       )}
       title="Compare Auth Code vs PKCE side by side"
     >

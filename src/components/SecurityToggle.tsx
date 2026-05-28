@@ -8,16 +8,16 @@ export function SecurityToggle() {
     <button
       onClick={toggleSecurityMode}
       className={clsx(
-        'flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium transition-all border',
+        'flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 border-2',
         securityMode
-          ? 'bg-red-600/20 border-red-500/50 text-red-400 hover:bg-red-600/30'
-          : 'bg-slate-700 border-slate-600 text-slate-300 hover:bg-slate-600'
+          ? 'bg-rose-50 border-rose-300 text-rose-700 hover:bg-rose-100'
+          : 'bg-emerald-50 border-emerald-200 text-emerald-700 hover:bg-emerald-100'
       )}
       title="Toggle security vulnerability highlighting"
     >
       <span className="text-lg">{securityMode ? '🔴' : '🟢'}</span>
       <span className="hidden sm:inline">
-        Security Mode {securityMode ? 'ON' : 'OFF'}
+        Security {securityMode ? 'ON' : 'OFF'}
       </span>
     </button>
   );

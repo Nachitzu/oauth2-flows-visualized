@@ -17,7 +17,7 @@ import { vulnerabilities } from '@/data/vulnerabilities';
 import clsx from 'clsx';
 
 const SEVERITY_COLORS: Record<Severity, string> = {
-  safe: '#22c55e',
+  safe: '#10b981',
   risk: '#f59e0b',
   critical: '#ef4444',
 };
@@ -44,20 +44,26 @@ function ActorNode({ data }: { data: ActorNodeData }) {
   return (
     <div
       className={clsx(
-        'flex flex-col items-center gap-1 px-4 py-3 rounded-xl border-2 transition-all duration-300 min-w-[100px]',
+        'flex flex-col items-center gap-1 px-5 py-4 rounded-2xl border-2 transition-all duration-300 min-w-[120px]',
         data.isHighlighted
-          ? 'bg-slate-800 shadow-lg shadow-slate-900/50 scale-105'
-          : 'bg-slate-800/80'
+          ? 'bg-white shadow-lg shadow-slate-200/80 scale-105'
+          : 'bg-white shadow-sm shadow-slate-200/60'
       )}
       style={{
         borderColor,
-        boxShadow: data.isHighlighted ? `0 0 20px ${SEVERITY_COLORS[data.severity]}40` : undefined,
+        boxShadow: data.isHighlighted
+          ? `0 8px 30px ${SEVERITY_COLORS[data.severity]}25`
+          : undefined,
       }}
     >
-      <Handle type="target" position={Position.Left} style={{ background: '#64748b', width: 8, height: 8, border: 'none' }} />
-      <div className="flex items-center gap-2 mb-2">
+      <Handle
+        type="target"
+        position={Position.Left}
+        style={{ background: '#94a3b8', width: 10, height: 10, border: 'none', borderRadius: '50%' }}
+      />
+      <div className="flex items-center gap-2.5 mb-1">
         <span className="text-2xl">{data.icon}</span>
-        <span className="text-xs font-medium text-slate-200">{data.label}</span>
+        <span className="text-sm font-semibold text-slate-700">{data.label}</span>
       </div>
       {data.isHighlighted && (
         <span
@@ -67,24 +73,28 @@ function ActorNode({ data }: { data: ActorNodeData }) {
           {data.severity}
         </span>
       )}
-      <Handle type="source" position={Position.Right} style={{ background: '#64748b', width: 8, height: 8, border: 'none' }} />
+      <Handle
+        type="source"
+        position={Position.Right}
+        style={{ background: '#94a3b8', width: 10, height: 10, border: 'none', borderRadius: '50%' }}
+      />
     </div>
   );
 }
 
 function LoginNode({ data }: { data: LoginNodeData }) {
   return (
-    <div className="bg-slate-900/90 border border-slate-700 rounded-xl p-4 w-[220px] shadow-lg">
-      <div className="text-xs uppercase tracking-wider text-slate-400 mb-2">{data.subtitle}</div>
-      <div className="text-sm font-semibold text-slate-100 mb-3">{data.title}</div>
+    <div className="bg-white border border-slate-200 rounded-2xl p-4 w-[240px] shadow-md shadow-slate-200/50">
+      <div className="text-xs uppercase tracking-wider text-slate-400 mb-2 font-medium">{data.subtitle}</div>
+      <div className="text-sm font-bold text-slate-800 mb-3">{data.title}</div>
       <div className="flex flex-col gap-2">
-        <div className="bg-slate-800 border border-slate-700 rounded-md px-2 py-1 text-xs text-slate-400">
+        <div className="bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-xs text-slate-400 font-mono">
           email
         </div>
-        <div className="bg-slate-800 border border-slate-700 rounded-md px-2 py-1 text-xs text-slate-400">
+        <div className="bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-xs text-slate-400 font-mono">
           password
         </div>
-        <div className="bg-blue-600/80 text-white text-xs font-medium text-center rounded-md py-1.5">
+        <div className="bg-indigo-600 text-white text-xs font-semibold text-center rounded-lg py-2.5 shadow-md shadow-indigo-500/30">
           Sign in
         </div>
       </div>
@@ -107,7 +117,6 @@ export function FlowCanvas({ flowId }: FlowCanvasProps) {
   const flow = FLOWS[activeFlowId];
   const currentStep = flow.steps[currentStepIndex];
 
-  // Determine which actors are involved in the current step
   const involvedActors = useMemo(() => {
     if (!currentStep) return new Set<ActorId>();
     const actors = new Set<ActorId>([currentStep.actorFrom, currentStep.actorTo]);
@@ -117,12 +126,10 @@ export function FlowCanvas({ flowId }: FlowCanvasProps) {
     return actors;
   }, [currentStep]);
 
-  // Determine severity of current step
   const stepSeverity = useMemo((): Severity => {
     if (!securityMode || !currentStep) return 'safe';
     if (currentStep.vulnerabilities.length === 0) return 'safe';
 
-    // Check if any vulnerability is critical
     const hasCritical = currentStep.vulnerabilities.some(
       (vulnId) => vulnerabilities[vulnId]?.severity === 'critical'
     );
@@ -136,12 +143,10 @@ export function FlowCanvas({ flowId }: FlowCanvasProps) {
     return 'safe';
   }, [currentStep, securityMode]);
 
-  // Create nodes for actors - horizontal layout
   const actors: ActorId[] = useMemo(() => {
     if (activeFlowId === 'client-credentials') {
       return ['client', 'authServer', 'resourceServer'];
     }
-
     return ['user', 'client', 'authServer', 'resourceServer'];
   }, [activeFlowId]);
 
@@ -153,7 +158,7 @@ export function FlowCanvas({ flowId }: FlowCanvasProps) {
       return {
         id: actorId,
         type: 'actor',
-        position: { x: index * 280 + 80, y: 120 },
+        position: { x: index * 280 + 80, y: 140 },
         data: {
           actor: actorId,
           label: actor.name,
@@ -175,7 +180,7 @@ export function FlowCanvas({ flowId }: FlowCanvasProps) {
     const loginNode: Node = {
       id: `login-${currentStep?.id ?? 'auth'}`,
       type: 'login',
-      position: { x: 420, y: 220 },
+      position: { x: 420, y: 260 },
       data: {
         title: 'Authorization Server Login',
         subtitle: 'Login Screen',
@@ -189,7 +194,6 @@ export function FlowCanvas({ flowId }: FlowCanvasProps) {
     return [...baseNodes, loginNode];
   }, [actors, involvedActors, stepSeverity, currentStep]);
 
-  // Create edges for the current step
   const memoEdges: Edge[] = useMemo(() => {
     return [
       {
@@ -200,25 +204,27 @@ export function FlowCanvas({ flowId }: FlowCanvasProps) {
         style: {
           stroke: stepSeverity === 'critical' ? SEVERITY_COLORS.critical
             : stepSeverity === 'risk' ? SEVERITY_COLORS.risk
-            : '#3b82f6',
-          strokeWidth: 2,
+            : '#6366f1',
+          strokeWidth: 2.5,
         },
         markerEnd: {
           type: MarkerType.ArrowClosed,
           color: stepSeverity === 'critical' ? SEVERITY_COLORS.critical
             : stepSeverity === 'risk' ? SEVERITY_COLORS.risk
-            : '#3b82f6',
+            : '#6366f1',
         },
         label: currentStep?.title,
         labelStyle: {
-          fill: '#94a3b8',
-          fontWeight: 500,
+          fill: '#475569',
+          fontWeight: 600,
           fontSize: 12,
         },
         labelBgStyle: {
-          fill: '#1e293b',
-          fillOpacity: 0.9,
+          fill: '#f8fafc',
+          fillOpacity: 0.95,
         },
+        labelBgPadding: [8, 4] as [number, number],
+        labelBgBorderRadius: 6,
       },
     ];
   }, [currentStep, stepSeverity]);
@@ -226,7 +232,6 @@ export function FlowCanvas({ flowId }: FlowCanvasProps) {
   const [nodes, setNodes, onNodesChange] = useNodesState(memoNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(memoEdges);
 
-  // Sync React Flow state when step/flow changes
   useEffect(() => {
     setNodes(memoNodes);
   }, [memoNodes, setNodes]);
@@ -236,7 +241,7 @@ export function FlowCanvas({ flowId }: FlowCanvasProps) {
   }, [memoEdges, setEdges]);
 
   return (
-    <div style={{ width: '100%', height: 500 }}>
+    <div style={{ width: '100%', height: 520 }}>
       <ReactFlow
         nodes={nodes}
         edges={edges}
@@ -248,9 +253,9 @@ export function FlowCanvas({ flowId }: FlowCanvasProps) {
         attributionPosition="bottom-left"
         proOptions={{ hideAttribution: true }}
       >
-        <Background color="#334155" gap={20} size={1} />
+        <Background color="#e2e8f0" gap={24} size={1.5} />
         <Controls
-          className="bg-slate-800 border border-slate-700 rounded-lg"
+          className="bg-white border border-slate-200 rounded-xl shadow-lg [&>button]:bg-white [&>button]:border-slate-200 [&>button]:text-slate-600 [&>button:hover]:bg-slate-50"
           showInteractive={false}
         />
       </ReactFlow>

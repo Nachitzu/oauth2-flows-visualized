@@ -11,21 +11,21 @@ function ParamRow({ name, value, description, required, example }: {
   example?: boolean;
 }) {
   return (
-    <div className="py-2 px-3 rounded-lg bg-slate-900/50 border border-slate-700/50">
-      <div className="flex items-center gap-2 mb-1">
-        <code className="text-sm font-mono text-blue-400">{name}</code>
+    <div className="py-3 px-4 rounded-xl bg-slate-50 border border-slate-200">
+      <div className="flex items-center gap-2 mb-2">
+        <code className="text-sm font-mono text-indigo-600 font-semibold">{name}</code>
         {required && (
-          <span className="text-[10px] font-bold uppercase tracking-wider text-red-400 bg-red-400/10 px-1.5 py-0.5 rounded">
+          <span className="text-[10px] font-bold uppercase tracking-wider text-rose-600 bg-rose-50 border border-rose-200 px-1.5 py-0.5 rounded">
             required
           </span>
         )}
         {example && (
-          <span className="text-[10px] font-bold uppercase tracking-wider text-amber-400 bg-amber-400/10 px-1.5 py-0.5 rounded">
+          <span className="text-[10px] font-bold uppercase tracking-wider text-amber-600 bg-amber-50 border border-amber-200 px-1.5 py-0.5 rounded">
             [EXAMPLE]
           </span>
         )}
       </div>
-      <div className="font-mono text-xs text-slate-300 mb-1 break-all">
+      <div className="font-mono text-xs text-slate-700 mb-2 break-all bg-white px-2 py-1.5 rounded border border-slate-100">
         {value}
       </div>
       <p className="text-xs text-slate-500">{description}</p>
@@ -41,9 +41,9 @@ export function StepInspector() {
   return (
     <div className="flex flex-col h-full">
       {/* Step header */}
-      <div className="p-4 border-b border-slate-700">
-        <div className="flex items-center gap-2 mb-1">
-          <span className="text-xs font-medium text-slate-500">
+      <div className="p-5 border-b border-slate-200">
+        <div className="flex items-center gap-2 mb-2">
+          <span className="text-xs font-semibold text-slate-400">
             Step {currentStepIndex + 1} of {flow.steps.length}
           </span>
           {step.rfcRef && (
@@ -51,28 +51,33 @@ export function StepInspector() {
               href={`https://datatracker.ietf.org/doc/${step.rfcRef.split(' ')[0].toLowerCase()}/`}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-xs text-blue-400 hover:text-blue-300 ml-auto"
+              className="text-xs text-indigo-600 hover:text-indigo-500 ml-auto font-medium"
             >
               {step.rfcRef}
             </a>
           )}
         </div>
-        <h3 className="text-base font-semibold text-slate-100">{step.title}</h3>
-        <p className="text-sm text-slate-400 mt-1">{step.description}</p>
+        <h3 className="text-lg font-bold text-slate-900">{step.title}</h3>
+        <p className="text-sm text-slate-500 mt-1 leading-relaxed">{step.description}</p>
       </div>
 
       {/* Request section */}
       {step.request && (
-        <div className="p-4 border-b border-slate-700">
-          <div className="flex items-center gap-2 mb-3">
-            <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
+        <div className="p-5 border-b border-slate-200">
+          <div className="flex items-center gap-3 mb-4">
+            <span className={clsx(
+              'text-xs font-bold uppercase tracking-wider px-2.5 py-1 rounded-lg',
+              step.request.method === 'GET' ? 'bg-emerald-100 text-emerald-700' :
+              step.request.method === 'POST' ? 'bg-amber-100 text-amber-700' :
+              'bg-slate-100 text-slate-700'
+            )}>
               {step.request.method}
             </span>
-            <code className="text-sm font-mono text-slate-300">{step.request.endpoint}</code>
+            <code className="text-sm font-mono text-slate-700">{step.request.endpoint}</code>
           </div>
 
           {step.request.params.length > 0 ? (
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col gap-3">
               {step.request.params.map((param) => (
                 <ParamRow
                   key={param.name}
@@ -85,26 +90,26 @@ export function StepInspector() {
               ))}
             </div>
           ) : (
-            <p className="text-sm text-slate-500 italic">No parameters</p>
+            <p className="text-sm text-slate-400 italic">No parameters</p>
           )}
         </div>
       )}
 
       {/* Response section */}
       {step.response && (
-        <div className="p-4 border-b border-slate-700">
+        <div className="p-5 border-b border-slate-200">
           <div className="flex items-center gap-2 mb-3">
             <span className={clsx(
-              'text-xs font-bold uppercase tracking-wider px-2 py-0.5 rounded',
-              step.response.status < 300 ? 'bg-emerald-500/20 text-emerald-400' : 'bg-red-500/20 text-red-400'
+              'text-xs font-bold uppercase tracking-wider px-2.5 py-1 rounded-lg',
+              step.response.status < 300 ? 'bg-emerald-100 text-emerald-700' : 'bg-rose-100 text-rose-700'
             )}>
               {step.response.status} {step.response.statusText}
             </span>
           </div>
 
           {step.response.body && (
-            <div className="bg-slate-900/50 rounded-lg border border-slate-700/50 p-3 overflow-auto max-h-40">
-              <pre className="text-xs font-mono text-slate-300 whitespace-pre-wrap break-all">
+            <div className="bg-slate-50 rounded-xl border border-slate-200 p-3 overflow-auto max-h-44">
+              <pre className="text-xs font-mono text-slate-700 whitespace-pre-wrap break-all">
                 {JSON.stringify(step.response.body, null, 2)}
               </pre>
             </div>
@@ -118,7 +123,7 @@ export function StepInspector() {
 
       {/* Internal action */}
       {step.internalAction && (
-        <div className="p-4 border-b border-slate-700">
+        <div className="p-5 border-b border-slate-200">
           <div className="flex items-center gap-2 mb-2">
             <span className="text-lg">
               {step.internalAction.actor === 'client' ? '📱' :
@@ -129,33 +134,33 @@ export function StepInspector() {
               Internal Action
             </span>
           </div>
-          <p className="text-sm text-slate-300">{step.internalAction.description}</p>
+          <p className="text-sm text-slate-600 leading-relaxed">{step.internalAction.description}</p>
         </div>
       )}
 
       {/* Security Note */}
       {securityMode && step.securityNote && (
-        <div className="p-4 border-b border-slate-700 bg-amber-500/5">
+        <div className="p-5 border-b border-slate-200 bg-amber-50/50">
           <div className="flex items-center gap-2 mb-2">
             <span className="text-lg">⚠️</span>
-            <span className="text-xs font-bold uppercase tracking-wider text-amber-400">
+            <span className="text-xs font-bold uppercase tracking-wider text-amber-600">
               Security Context
             </span>
           </div>
-          <p className="text-sm text-slate-300">{step.securityNote}</p>
+          <p className="text-sm text-slate-700 leading-relaxed">{step.securityNote}</p>
         </div>
       )}
 
       {/* Vulnerability alerts */}
       {securityMode && step.vulnerabilities.length > 0 && (
-        <div className="p-4 flex-1 overflow-auto">
-          <div className="flex items-center gap-2 mb-3">
+        <div className="p-5 flex-1 overflow-auto">
+          <div className="flex items-center gap-2 mb-4">
             <span className="text-lg">🔴</span>
-            <span className="text-xs font-bold uppercase tracking-wider text-red-400">
+            <span className="text-xs font-bold uppercase tracking-wider text-rose-600">
               Vulnerabilities ({step.vulnerabilities.length})
             </span>
           </div>
-          <div className="flex flex-col gap-3">
+          <div className="flex flex-col gap-4">
             {step.vulnerabilities.map((vulnId) => (
               <VulnerabilityAlert key={vulnId} vulnerabilityId={vulnId} />
             ))}
